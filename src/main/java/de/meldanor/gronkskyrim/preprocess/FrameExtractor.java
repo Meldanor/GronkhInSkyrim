@@ -8,6 +8,7 @@ import net.bramp.ffmpeg.FFmpegUtils;
 import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.job.FFmpegJob;
+import net.bramp.ffmpeg.probe.FFmpegStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,15 +36,26 @@ public class FrameExtractor {
                     .addExtraArgs("-qscale:v", "5")
                     .done();
 
+
+            double frames = ffprobe.probe(episode.getFile().getAbsolutePath()).getStreams()
+                    .stream()
+                    .filter(f -> f.codec_type == FFmpegStream.CodecType.VIDEO)
+                    .map(f -> f.nb_frames)
+                    .findFirst()
+                    .orElse(1L);
+
             FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
-            FFmpegJob job = executor.createJob(builder, progress ->
-                    // Print out interesting information about the progress
-                    LOG.info(String.format("status:%s frame:%d time:%s ms fps:%.0f speed:%.2fx",
-                            progress.status,
-                            progress.frame,
-                            FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
-                            progress.fps.doubleValue(),
-                            progress.speed))
+            FFmpegJob job = executor.createJob(builder, progress -> {
+                        double percent = (((double) progress.frame) / frames) * 100.0;
+                        // Print out interesting information about the progress
+                        LOG.info(String.format("[%.0f%%] status:%s frame:%d time:%s ms fps:%.0f speed:%.2fx",
+                                percent,
+                                progress.status,
+                                progress.frame,
+                                FFmpegUtils.toTimecode(progress.out_time_ns, TimeUnit.NANOSECONDS),
+                                progress.fps.doubleValue(),
+                                progress.speed));
+                    }
             );
             job.run();
         } catch (Exception e) {

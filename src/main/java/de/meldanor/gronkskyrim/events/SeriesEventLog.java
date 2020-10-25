@@ -40,7 +40,7 @@ public class SeriesEventLog {
         for (int i = 0; i < eventLogs.size(); i++) {
             EpisodeEventLog eventLog = eventLogs.get(i);
             File f = new File(directory, eventLog.getLogName());
-            LOG.info("({}/{})Writing event log to {}", i + 1, eventLogs.size(), f);
+            LOG.info("({}/{}) Writing event log to {}", i + 1, eventLogs.size(), f);
             eventLog.writeTo(f);
         }
         LOG.info("Finished writing series event log to '{}'...", directory);

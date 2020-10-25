@@ -4,6 +4,7 @@ import de.meldanor.gronkskyrim.data.EventData;
 import de.meldanor.gronkskyrim.data.PlayerWeight;
 import de.meldanor.gronkskyrim.ocr.Frame;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Event {
@@ -15,6 +16,9 @@ public class Event {
     }
 
     public void appendData(EventData<?> eventData) {
+        if (eventData == null) {
+            return;
+        }
         if (eventData.getEventType() == EventType.PLAYER_WEIGHT) {
             this.playerWeight = (PlayerWeight) eventData;
         } else {
@@ -22,8 +26,13 @@ public class Event {
         }
     }
 
-    public List<EventData<?>> getData(){
-        return List.of(this.playerWeight);
+    public List<EventData<?>> getData() {
+        List<EventData<?>> data = new ArrayList<>();
+        if (this.playerWeight != null) {
+            data.add(playerWeight);
+        }
+
+        return data;
     }
 
     public EventData<?> getDatum(EventType type) {
@@ -31,5 +40,9 @@ public class Event {
             return this.playerWeight;
         }
         throw new RuntimeException("Unsupported event data!");
+    }
+
+    public int getFrameTime() {
+        return this.frame.episodeSecond();
     }
 }

@@ -24,7 +24,7 @@ public class Frame {
     }
 
     public int episodeSecond() {
-        return this.index * Config.OCR_FRAMES_PER_SECOND;
+        return this.index / Config.OCR_FRAMES_PER_SECOND;
     }
 
     public Episode getEpisode() {

@@ -1,6 +1,5 @@
 package de.meldanor.gronkskyrim.events;
 
-import de.meldanor.gronkskyrim.data.EventData;
 import de.meldanor.gronkskyrim.source.Episode;
 
 import java.io.File;
@@ -8,6 +7,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * <p>
  * The persisted EventLog is looking like:
  * <pre>
- *     EVENT_TYPE=EVENT_VALUE;;;EVENT_TYPE=EVENT_VALUE;;;...;;;EVENT_TYPE=EVENT_VALUE;;;
+ *     FRAME_INDEX;;;EVENT_TYPE=EVENT_VALUE;;;EVENT_TYPE=EVENT_VALUE;;;...;;;EVENT_TYPE=EVENT_VALUE;;;
  * </pre>
  * <p>
  * The name of the file is define
@@ -31,6 +31,10 @@ public class EpisodeEventLog {
 
     public void append(Event event) {
         this.events.add(event);
+    }
+
+    public void append(List<Event> events) {
+        this.events.addAll(events);
     }
 
     public Episode getEpisode() {
@@ -54,9 +58,15 @@ public class EpisodeEventLog {
             for (Event event : events) {
                 String line = event.getData()
                         .stream()
-                        .map(EventData::toEventLogString)
+                        .map(eventData -> eventData.getEventType().name() + "=" + eventData.toEventLogString())
+                        .filter(Predicate.not(String::isBlank))
                         .collect(Collectors.joining(";;;"));
-                printer.println(line);
+                if (!line.isBlank()) {
+                    printer.print("EPISODE_TIME_STAMP=");
+                    printer.print(event.getFrameTime());
+                    printer.print(";;;");
+                    printer.println(line);
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
