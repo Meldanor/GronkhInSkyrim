@@ -18,7 +18,7 @@ public class FrameExtractor {
 
     private static final Logger LOG = LoggerFactory.getLogger(FrameExtractor.class.getSimpleName());
 
-    public void extractFrames(Episode episode) {
+    public File extractFrames(Episode episode) {
         LOG.info("Extracting frames of " + episode.toString());
         String episodeIndex = String.format("%04d", episode.getIndex());
         File episodeFrameDir = new File(Config.FRAMES_PATH, episodeIndex);
@@ -49,6 +49,8 @@ public class FrameExtractor {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        return episodeFrameDir;
     }
 
 

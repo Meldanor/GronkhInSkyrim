@@ -42,11 +42,11 @@ public class EpisodeEventLog {
     }
 
     /**
-     * @return EpisodeIndex__EpisodeLengthSeconds__EpisodeName
+     * @return EpisodeIndex__EpisodeLengthSeconds__EpisodeName.txt
      */
     public String getLogName() {
         String indexString = String.format("%04d", this.episode.getIndex());
-        return indexString + "__" + this.episode.getLengthSeconds() + "s__" + this.episode.getName();
+        return indexString + "__" + this.episode.getLengthSeconds() + "s__" + this.episode.getName() + ".txt";
     }
 
     public void writeTo(File file) {
