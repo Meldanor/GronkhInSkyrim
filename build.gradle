@@ -1,9 +1,14 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group 'de.meldanor'
 version '1.0-SNAPSHOT'
+
+application {
+    mainClass = 'de.meldanor.gronkskyrim.Application'
+}
 
 repositories {
     mavenCentral()
