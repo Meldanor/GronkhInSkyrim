@@ -1,6 +1,6 @@
 package de.meldanor.gronkskyrim.source;
 
-import de.meldanor.gronkskyrim.Application;
+import de.meldanor.gronkskyrim.Config;
 import de.meldanor.gronkskyrim.Util;
 
 import java.io.File;
@@ -43,7 +43,7 @@ public class EpisodeFactory {
 
     private int extractEpisodeLength(File file) {
         ProcessBuilder builder = new ProcessBuilder(
-                Application.FFPROBE_PATH.getAbsolutePath(),
+                Config.FFPROBE_PATH.getAbsolutePath(),
                 "-v",
                 "error",
                 "-show_entries",

@@ -1,13 +1,11 @@
 package de.meldanor.gronkskyrim.ocr;
 
+import de.meldanor.gronkskyrim.Config;
 import de.meldanor.gronkskyrim.source.Episode;
 
 import java.io.File;
 
 public class Frame {
-
-    // The FPS of the OCR process - the more frames, there more data
-    private static final int OCR_FRAMES_PER_SECOND = 10;
 
     private final Episode episode;
     private final int index;
@@ -26,7 +24,7 @@ public class Frame {
     }
 
     public int episodeSecond() {
-        return this.index * OCR_FRAMES_PER_SECOND;
+        return this.index * Config.OCR_FRAMES_PER_SECOND;
     }
 
     public Episode getEpisode() {
