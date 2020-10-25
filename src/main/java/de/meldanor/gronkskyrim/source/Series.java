@@ -2,6 +2,7 @@ package de.meldanor.gronkskyrim.source;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ public class Series {
     private List<Episode> parseEpisodes(File seriesDir) throws Exception{
         return Files.list(seriesDir.toPath())
                 .map(p -> EPISODE_FACTORY.createEpisode(this, p.toFile()))
+                .sorted(Comparator.comparing(Episode::getIndex))
                 .collect(Collectors.toList());
     }
 
@@ -29,7 +31,6 @@ public class Series {
     }
 
     /**
-     *
      * @param episodeIndex 1 based index (as the video title
      * @return
      */
@@ -37,5 +38,7 @@ public class Series {
         return getEpisodes().get(episodeIndex - 1);
     }
 
-
+    public int getTotalEpisodeLengthSeconds() {
+        return totalEpisodeLengthSeconds;
+    }
 }

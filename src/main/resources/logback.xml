@@ -1,0 +1,28 @@
+<configuration>
+
+    <appender name="DEPENDENCIES" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <appender name="APPLICATION" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %C.%M - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="DEPENDENCIES"/>
+    </root>
+
+    <logger name="net.bramp.ffmpeg" level="WARN" additivity="false">
+        <appender-ref ref="DEPENDENCIES"/>
+    </logger>
+
+    <!-- Only log the class and method for our outputs-->
+    <logger name="de.meldanor" level="TRACE" additivity="false">
+        <appender-ref ref="APPLICATION"/>
+    </logger>
+</configuration>

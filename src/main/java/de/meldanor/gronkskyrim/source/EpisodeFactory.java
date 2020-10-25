@@ -1,7 +1,8 @@
 package de.meldanor.gronkskyrim.source;
 
 import de.meldanor.gronkskyrim.Config;
-import de.meldanor.gronkskyrim.Util;
+import net.bramp.ffmpeg.FFprobe;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 import java.io.File;
 import java.util.regex.Matcher;
@@ -42,22 +43,10 @@ public class EpisodeFactory {
     }
 
     private int extractEpisodeLength(File file) {
-        ProcessBuilder builder = new ProcessBuilder(
-                Config.FFPROBE_PATH.getAbsolutePath(),
-                "-v",
-                "error",
-                "-show_entries",
-                "format=duration",
-                "-of",
-                "default=noprint_wrappers=1:nokey=1",
-                file.getAbsolutePath()
-
-        ).redirectErrorStream(true);
-        builder.environment().put("LANG", "de_DE.UTF-8");
         try {
-            Process pr = builder.start();
-            String s = Util.readProcessOutput(pr);
-            return (int) Double.parseDouble(s);
+            FFprobe ffProbe = Config.createFfprobe();
+            FFmpegProbeResult result = ffProbe.probe(file.getAbsolutePath());
+            return (int) result.getFormat().duration;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
