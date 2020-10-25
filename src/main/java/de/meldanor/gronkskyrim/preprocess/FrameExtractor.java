@@ -20,6 +20,9 @@ public class FrameExtractor {
 
     public void extractFrames(Episode episode) {
         LOG.info("Extracting frames of " + episode.toString());
+        String episodeIndex = String.format("%04d", episode.getIndex());
+        File episodeFrameDir = new File(Config.FRAMES_PATH, episodeIndex);
+        episodeFrameDir.mkdirs();
         try {
 
             FFmpeg ffmpeg = Config.createFfmpeg();
@@ -28,7 +31,7 @@ public class FrameExtractor {
                     .addInput(episode.getFile().getAbsolutePath())
                     // THIS IS A BUG OF THE LIBRARY IN 0.6.2 - THE VALUES ARE SWAPPED
                     .setAudioFilter("fps=" + Config.OCR_FRAMES_PER_SECOND)
-                    .addOutput(new File(Config.FRAMES_PATH, "%07d.jpg").getAbsolutePath())
+                    .addOutput(new File(episodeFrameDir, "%07d.jpg").getAbsolutePath())
                     .addExtraArgs("-qscale:v", "5")
                     .done();
 
