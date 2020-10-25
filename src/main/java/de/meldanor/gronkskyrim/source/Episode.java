@@ -8,12 +8,14 @@ public final class Episode {
     private final String name;
     private final int index;
     private final int lengthSeconds;
+    private final Series series;
 
-    Episode(File file, String name, int index, int lengthSeconds) {
+    Episode(File file, String name, int index, int lengthSeconds, Series series) {
         this.file = file;
         this.name = name;
         this.index = index;
         this.lengthSeconds = lengthSeconds;
+        this.series = series;
     }
 
     public File getFile() {
@@ -30,6 +32,10 @@ public final class Episode {
 
     public int getLengthSeconds() {
         return lengthSeconds;
+    }
+
+    public Series getSeries() {
+        return series;
     }
 
     @Override

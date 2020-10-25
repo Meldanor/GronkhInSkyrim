@@ -1,6 +1,8 @@
 package de.meldanor.gronkskyrim.data;
 
-public class PlayerWeight {
+import de.meldanor.gronkskyrim.events.EventType;
+
+public class PlayerWeight implements EventData<PlayerWeight> {
 
     private final int currentWeight;
     private final int maximumWeight;
@@ -19,9 +21,23 @@ public class PlayerWeight {
         return maximumWeight;
     }
 
-
     @Override
     public String toString() {
         return currentWeight + "/" + maximumWeight;
+    }
+
+    @Override
+    public String toEventLogString() {
+        return toString();
+    }
+
+    @Override
+    public PlayerWeight fromEventLogString(String eventLogString) {
+        return new PlayerWeight(eventLogString);
+    }
+
+    @Override
+    public EventType getEventType() {
+        return EventType.PLAYER_WEIGHT;
     }
 }

@@ -20,11 +20,11 @@ public class EpisodeFactory {
 
     private static final Pattern EPISODE_NAME_PATTERN = Pattern.compile("(\\d{3}) - (.*).(?:.{3,4})");
 
-    public Episode createEpisode(File file) {
+    public Episode createEpisode(Series series, File file) {
         String fileName = file.getName();
         Matcher matcher = EPISODE_NAME_PATTERN.matcher(fileName);
-        String name = "";
-        int index = 0;
+        String name;
+        int index;
         if (matcher.find()) {
             index = Integer.parseInt(matcher.group(1));
             name = matcher.group(2);
@@ -37,8 +37,8 @@ public class EpisodeFactory {
                 file,
                 name,
                 index,
-                episodeLength
-        );
+                episodeLength,
+                series);
     }
 
     private int extractEpisodeLength(File file) {

@@ -20,7 +20,7 @@ public class Series {
 
     private List<Episode> parseEpisodes(File seriesDir) throws Exception{
         return Files.list(seriesDir.toPath())
-                .map(p -> EPISODE_FACTORY.createEpisode(p.toFile()))
+                .map(p -> EPISODE_FACTORY.createEpisode(this, p.toFile()))
                 .collect(Collectors.toList());
     }
 
