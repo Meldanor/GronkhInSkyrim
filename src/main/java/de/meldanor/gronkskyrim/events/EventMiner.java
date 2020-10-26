@@ -3,6 +3,7 @@ package de.meldanor.gronkskyrim.events;
 import de.meldanor.gronkskyrim.Config;
 import de.meldanor.gronkskyrim.data.PlayerWeight;
 import de.meldanor.gronkskyrim.ocr.Frame;
+import de.meldanor.gronkskyrim.ocr.ParseException;
 import de.meldanor.gronkskyrim.ocr.Tesseract;
 import de.meldanor.gronkskyrim.preprocess.FrameExtractor;
 import de.meldanor.gronkskyrim.source.Episode;
@@ -76,6 +77,9 @@ public class EventMiner {
             } else {
                 return null;
             }
+        } catch (ParseException e) {
+            LOG.warn("Can't parse '{}'", e.getOcrText());
+            return null;
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {

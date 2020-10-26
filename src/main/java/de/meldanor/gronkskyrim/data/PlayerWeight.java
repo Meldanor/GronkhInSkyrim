@@ -1,6 +1,7 @@
 package de.meldanor.gronkskyrim.data;
 
 import de.meldanor.gronkskyrim.events.EventType;
+import de.meldanor.gronkskyrim.ocr.ParseException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,7 +11,7 @@ public class PlayerWeight implements EventData<PlayerWeight> {
     private final int currentWeight;
     private final int maximumWeight;
 
-    private static final Pattern WEIGHT_PATTERN = Pattern.compile("Traglast\\s+(\\d+)/(\\d+)");
+    private static final Pattern WEIGHT_PATTERN = Pattern.compile("Traglast\\s+(\\d+)\\s?/\\s?(\\d+)");
 
     public PlayerWeight(String ocrText) {
         Matcher matcher = WEIGHT_PATTERN.matcher(ocrText);
@@ -18,7 +19,7 @@ public class PlayerWeight implements EventData<PlayerWeight> {
             this.currentWeight = Integer.parseInt(matcher.group(1).strip());
             this.maximumWeight = Integer.parseInt(matcher.group(2).strip());
         } else {
-            throw new RuntimeException("Can't parse '" + ocrText + "'");
+            throw new ParseException(ocrText);
         }
     }
 
