@@ -8,9 +8,6 @@ import de.meldanor.gronkskyrim.source.Series;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.time.LocalDateTime;
-
 public class Application {
 
     private static final Logger LOG = LoggerFactory.getLogger(Application.class.getSimpleName());
@@ -21,15 +18,15 @@ public class Application {
 
         Series series = new Series(Config.VIDEOS_PATH);
         LOG.info("Extracting events...");
-        Episode episode = series.getEpisode(2);
         EventMiner eventMiner = new EventMiner();
-        SeriesEventLog seriesEventLog = new SeriesEventLog(series);
-        EpisodeEventLog episodeEventLog = eventMiner.mineEvents(episode);
-        seriesEventLog.addEpisodeLog(episodeEventLog);
+        SeriesEventLog seriesEventLog = new SeriesEventLog(series, Config.EVENT_LOG_PATH);
+        for (Episode episode : series.getEpisodes()) {
+            LOG.info("Extracting events from episode {}...", episode);
+            EpisodeEventLog episodeEventLog = eventMiner.mineEvents(episode);
+            seriesEventLog.addEpisodeLog(episodeEventLog);
+            LOG.info("Finished extracting events from episode {}!", episode);
+        }
 
-        File output = new File(Config.EVENT_LOG_PATH, seriesEventLog.getDirectoryName(LocalDateTime.now()));
-        output.mkdirs();
-        seriesEventLog.writeTo(output);
 
 //        episodeEventLog.writeTo(new File(Config.EVENT_LOG_PATH,episodeEventLog.getLogName()));
         LOG.info("Finished!");

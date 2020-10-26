@@ -8,7 +8,6 @@ import net.bramp.ffmpeg.FFmpegUtils;
 import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.job.FFmpegJob;
-import net.bramp.ffmpeg.probe.FFmpegStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,10 +19,13 @@ public class FrameExtractor {
     private static final Logger LOG = LoggerFactory.getLogger(FrameExtractor.class.getSimpleName());
 
     public File extractFrames(Episode episode) {
-        LOG.info("Extracting frames of " + episode.toString());
+        LOG.info("Extracting frames of {}", episode);
         String episodeIndex = String.format("%04d", episode.getIndex());
         File episodeFrameDir = new File(Config.FRAMES_PATH, episodeIndex);
-        episodeFrameDir.mkdirs();
+        if (!episodeFrameDir.mkdirs()) {
+            throw new RuntimeException("Can't create directory '" + episodeFrameDir + "'");
+        }
+        int foundFrames;
         try {
 
             FFmpeg ffmpeg = Config.createFfmpeg();
@@ -37,18 +39,15 @@ public class FrameExtractor {
                     .done();
 
 
-            double frames = ffprobe.probe(episode.getFile().getAbsolutePath()).getStreams()
-                    .stream()
-                    .filter(f -> f.codec_type == FFmpegStream.CodecType.VIDEO)
-                    .map(f -> f.nb_frames)
-                    .findFirst()
-                    .orElse(1L);
+            long frames = ffprobe.probe(episode.getFile().getAbsolutePath()).getStreams()
+                    .get(0)
+                    .nb_frames;
 
             FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
             FFmpegJob job = executor.createJob(builder, progress -> {
-                        double percent = (((double) progress.frame) / frames) * 100.0;
+                        double percent = (((double) progress.frame) / ((double) frames)) * 100.0;
                         // Print out interesting information about the progress
-                        LOG.info(String.format("[%.0f%%] status:%s frame:%d time:%s ms fps:%.0f speed:%.2fx",
+                        LOG.debug(String.format("[%.0f%%] status:%s frame:%d time:%s ms fps:%.0f speed:%.2fx",
                                 percent,
                                 progress.status,
                                 progress.frame,
@@ -61,6 +60,9 @@ public class FrameExtractor {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        String[] list = episodeFrameDir.list();
+        foundFrames = list != null ? list.length : -1;
+        LOG.info("Finished extracting {} frames of {}", foundFrames, episode);
 
         return episodeFrameDir;
     }
