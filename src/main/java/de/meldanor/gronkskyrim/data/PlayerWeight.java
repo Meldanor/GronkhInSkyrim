@@ -11,7 +11,7 @@ public class PlayerWeight implements EventData<PlayerWeight> {
     private final int currentWeight;
     private final int maximumWeight;
 
-    private static final Pattern WEIGHT_PATTERN = Pattern.compile("Traglast\\s+(\\d+)\\s?/\\s?(\\d+)");
+    private static final Pattern WEIGHT_PATTERN = Pattern.compile("Traglast\\s*(\\d+)\\s?/\\s?(\\d+)");
 
     public PlayerWeight(String ocrText) {
         Matcher matcher = WEIGHT_PATTERN.matcher(ocrText);
