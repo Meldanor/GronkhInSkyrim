@@ -13,8 +13,6 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Comparator;
@@ -102,16 +100,8 @@ public class EventMiner {
 
     private String playerWeightGoldString(Frame frame, File temporaryFolder) throws Exception {
         // Coords are from a 1080p video the position of the armor, weight and gold
-        File weightFrame = clipFrame(frame, 1090, 980, 560, 60, temporaryFolder);
-        return Tesseract.instance().extractText(weightFrame);
-    }
-
-    private File clipFrame(Frame frame, int x, int y, int width, int height, File temporaryFolder) throws Exception {
-        BufferedImage image = ImageIO.read(frame.getFrameFile());
-        BufferedImage subimage = image.getSubimage(x, y, width, height);
-        File file = File.createTempFile(frame.episodeSecond() + "_playerweight", ".png", temporaryFolder);
-        ImageIO.write(subimage, "png", file);
-        return file;
+        File file = frame.clipFrame(1090, 980, 650, 60, temporaryFolder);
+        return Tesseract.instance().extractText(file);
     }
 
     private void cleanUpTemporaryFiles(File temporaryFolder) {

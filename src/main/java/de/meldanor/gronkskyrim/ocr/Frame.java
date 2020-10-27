@@ -3,6 +3,8 @@ package de.meldanor.gronkskyrim.ocr;
 import de.meldanor.gronkskyrim.Config;
 import de.meldanor.gronkskyrim.source.Episode;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class Frame {
@@ -37,5 +39,22 @@ public class Frame {
 
     public File getFrameFile() {
         return frameFile;
+    }
+
+//    public InputStream clipFrame(int x, int y, int width, int height) throws Exception {
+//        BufferedImage image = ImageIO.read(this.getFrameFile());
+//        BufferedImage subimage = image.getSubimage(x, y, width, height);
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//        ImageIO.write(subimage, "png", stream);
+//        stream.flush();
+//        return new ByteArrayInputStream(stream.toByteArray());
+//    }
+
+    public File clipFrame(int x, int y, int width, int height, File temporaryFolder) throws Exception {
+        BufferedImage image = ImageIO.read(this.getFrameFile());
+        BufferedImage subimage = image.getSubimage(x, y, width, height);
+        File file = File.createTempFile(this.episodeSecond() + "_playerweight", ".png", temporaryFolder);
+        ImageIO.write(subimage, "png", file);
+        return file;
     }
 }

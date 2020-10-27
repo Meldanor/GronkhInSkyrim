@@ -22,13 +22,15 @@ public class Tesseract {
     public String extractText(File file) {
         ProcessBuilder builder = new ProcessBuilder(
                 this.path,
-                file.getAbsolutePath(),
+                "stdin",
                 "stdout",
                 "quiet",
                 "-l",
                 "deu"
 
-        ).redirectErrorStream(true);
+        )
+                .redirectErrorStream(true)
+                .redirectInput(file);
         builder.environment().put("LANG", "de_DE.UTF-8");
         try {
             Process pr = builder.start();
@@ -37,4 +39,27 @@ public class Tesseract {
             throw new RuntimeException(e);
         }
     }
+
+//    public String extractText(InputStream streamWithPicture) {
+//        ProcessBuilder builder = new ProcessBuilder(
+//                this.path,
+//                "stdin",
+//                "stdout",
+//                "quiet",
+//                "-l",
+//                "deu"
+//        ).redirectErrorStream(true);
+//        builder.environment().put("LANG", "de_DE.UTF-8");
+//        builder.redirectInput()
+//        try {
+//            Process pr = builder.start();
+//            System.out.println("lol1");
+//            streamWithPicture.transferTo(pr.getOutputStream());
+//            streamWithPicture.close();
+//            System.out.println("lol2");
+//            return Util.readProcessOutput(pr);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }
