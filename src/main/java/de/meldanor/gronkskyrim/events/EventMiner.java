@@ -1,6 +1,8 @@
 package de.meldanor.gronkskyrim.events;
 
 import de.meldanor.gronkskyrim.Config;
+import de.meldanor.gronkskyrim.data.EventData;
+import de.meldanor.gronkskyrim.data.PlayerGold;
 import de.meldanor.gronkskyrim.data.PlayerWeight;
 import de.meldanor.gronkskyrim.ocr.Frame;
 import de.meldanor.gronkskyrim.ocr.ParseException;
@@ -17,6 +19,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class EventMiner {
@@ -60,31 +63,47 @@ public class EventMiner {
     private Event mineEventsOfFrame(Frame frame, File temporaryFolder) {
         Event event = new Event(frame);
 
-        PlayerWeight playerWeight = extractPlayerWeight(frame, temporaryFolder);
-        event.appendData(playerWeight);
+        try {
+            String text = playerWeightGoldString(frame, temporaryFolder);
+            if (text.contains("Traglast")) {
+                LOG.debug("Extracting player weight...");
+                PlayerWeight weight = tryExtractData(text, PlayerWeight::new);
+                if (weight != null) {
+                    event.appendData(weight);
+                } else {
+                    LOG.warn("Can't extract weight from '{}'", text);
+                }
+                LOG.debug("Finished extracting player weight!");
+            }
+            if (text.contains("Gold")) {
+                LOG.debug("Extracting player gold...");
+                PlayerGold gold = tryExtractData(text, PlayerGold::new);
+                if (gold != null) {
+                    event.appendData(gold);
+                } else {
+                    LOG.warn("Can't extract gold from '{}'", text);
+                }
+                LOG.debug("Finished extracting player gold!");
+            }
+        } catch (Exception e) {
+            LOG.error("Extract text of frame '{}'", frame, e);
+        }
 
         return event;
     }
 
-    private PlayerWeight extractPlayerWeight(Frame frame, File temporaryFolder) {
-        LOG.debug("Extracting player weight...");
+    private <T extends EventData<?>> T tryExtractData(String text, Function<String, T> constructor) {
         try {
-            // Coords are from a 1080p video the position of the armor, weight and gold
-            File weightFrame = clipFrame(frame, 1090, 980, 560, 60, temporaryFolder);
-            String text = Tesseract.instance().extractText(weightFrame);
-            if (text.contains("Traglast")) {
-                return new PlayerWeight(text);
-            } else {
-                return null;
-            }
+            return constructor.apply(text);
         } catch (ParseException e) {
-            LOG.warn("Can't parse '{}'", e.getOcrText());
             return null;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            LOG.debug("Finished extracting player weight!");
         }
+    }
+
+    private String playerWeightGoldString(Frame frame, File temporaryFolder) throws Exception {
+        // Coords are from a 1080p video the position of the armor, weight and gold
+        File weightFrame = clipFrame(frame, 1090, 980, 560, 60, temporaryFolder);
+        return Tesseract.instance().extractText(weightFrame);
     }
 
     private File clipFrame(Frame frame, int x, int y, int width, int height, File temporaryFolder) throws Exception {
