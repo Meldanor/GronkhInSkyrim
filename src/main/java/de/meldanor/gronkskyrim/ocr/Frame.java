@@ -1,7 +1,7 @@
 package de.meldanor.gronkskyrim.ocr;
 
 import de.meldanor.gronkskyrim.Config;
-import de.meldanor.gronkskyrim.source.Episode;
+import de.meldanor.gronkskyrim.source.SourceEpisode;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -9,11 +9,11 @@ import java.io.File;
 
 public class Frame {
 
-    private final Episode episode;
+    private final SourceEpisode episode;
     private final int index;
     private final File frameFile;
 
-    public Frame(Episode episode, File frameFile) {
+    public Frame(SourceEpisode episode, File frameFile) {
         this.episode = episode;
         this.frameFile = frameFile;
         this.index = readIndex(frameFile);
@@ -29,7 +29,7 @@ public class Frame {
         return this.index / Config.OCR_FRAMES_PER_SECOND;
     }
 
-    public Episode getEpisode() {
+    public SourceEpisode getEpisode() {
         return episode;
     }
 

@@ -16,6 +16,7 @@ repositories {
 
 dependencies {
     implementation 'ch.qos.logback:logback-classic:1.2.3'
+    implementation 'info.picocli:picocli:4.5.2'
     compile 'net.bramp.ffmpeg:ffmpeg:0.6.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
 }

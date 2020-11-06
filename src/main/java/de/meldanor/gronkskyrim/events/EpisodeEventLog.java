@@ -1,6 +1,6 @@
 package de.meldanor.gronkskyrim.events;
 
-import de.meldanor.gronkskyrim.source.Episode;
+import de.meldanor.gronkskyrim.source.SourceEpisode;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
  * The name of the file is define
  */
 public class EpisodeEventLog {
-    private final Episode episode;
+    private final SourceEpisode episode;
     private List<Event> events;
 
-    public EpisodeEventLog(Episode episode) {
+    public EpisodeEventLog(SourceEpisode episode) {
         this.episode = episode;
         this.events = new ArrayList<>();
     }
@@ -37,7 +37,7 @@ public class EpisodeEventLog {
         this.events.addAll(events);
     }
 
-    public Episode getEpisode() {
+    public SourceEpisode getEpisode() {
         return episode;
     }
 

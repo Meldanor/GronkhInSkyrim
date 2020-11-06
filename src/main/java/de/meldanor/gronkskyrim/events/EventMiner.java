@@ -8,7 +8,7 @@ import de.meldanor.gronkskyrim.ocr.Frame;
 import de.meldanor.gronkskyrim.ocr.ParseException;
 import de.meldanor.gronkskyrim.ocr.Tesseract;
 import de.meldanor.gronkskyrim.preprocess.FrameExtractor;
-import de.meldanor.gronkskyrim.source.Episode;
+import de.meldanor.gronkskyrim.source.SourceEpisode;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class EventMiner {
         this.frameExtractor = new FrameExtractor();
     }
 
-    public EpisodeEventLog mineEvents(Episode episode) {
+    public EpisodeEventLog mineEvents(SourceEpisode episode) {
         EpisodeEventLog log = new EpisodeEventLog(episode);
         File framesDir = frameExtractor.extractFrames(episode);
         LOG.info("Mining events of '{}'...", episode);

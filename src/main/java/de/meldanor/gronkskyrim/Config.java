@@ -29,4 +29,6 @@ public class Config {
     public static final File FRAMES_PATH = new File("/frames");
     // An output path where the event log files are written to
     public static final File EVENT_LOG_PATH = new File("/eventLogs");
+    // A 
+    public static final File POST_PROCESS_SERIES_LOG_PATH = new File("/Users/kiliangartner/Downloads/20201027__231807__300__669769");
 }

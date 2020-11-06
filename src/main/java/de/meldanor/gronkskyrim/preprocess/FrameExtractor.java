@@ -1,7 +1,7 @@
 package de.meldanor.gronkskyrim.preprocess;
 
 import de.meldanor.gronkskyrim.Config;
-import de.meldanor.gronkskyrim.source.Episode;
+import de.meldanor.gronkskyrim.source.SourceEpisode;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.FFmpegUtils;
@@ -18,7 +18,7 @@ public class FrameExtractor {
 
     private static final Logger LOG = LoggerFactory.getLogger(FrameExtractor.class.getSimpleName());
 
-    public File extractFrames(Episode episode) {
+    public File extractFrames(SourceEpisode episode) {
         LOG.info("Extracting frames of {}", episode);
         String episodeIndex = String.format("%04d", episode.getIndex());
         File episodeFrameDir = new File(Config.FRAMES_PATH, episodeIndex);

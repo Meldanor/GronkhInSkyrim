@@ -1,6 +1,6 @@
 package de.meldanor.gronkskyrim.events;
 
-import de.meldanor.gronkskyrim.source.Series;
+import de.meldanor.gronkskyrim.source.SourceSeries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,10 +13,10 @@ public class SeriesEventLog {
     private static final Logger LOG = LoggerFactory.getLogger(SeriesEventLog.class.getSimpleName());
 
     private final File episodeLogDirectory;
-    private final Series series;
+    private final SourceSeries series;
 //    private List<EpisodeEventLog> eventLogs;
 
-    public SeriesEventLog(Series series, File logDirectory) {
+    public SeriesEventLog(SourceSeries series, File logDirectory) {
         this.series = series;
         this.episodeLogDirectory = new File(logDirectory, getDirectoryName(LocalDateTime.now()));
         if (!episodeLogDirectory.mkdirs()) {
