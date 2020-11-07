@@ -26,6 +26,10 @@ public class PlayerGold implements EventData<PlayerGold> {
         this.gold = gold;
     }
 
+    public int getGold() {
+        return gold;
+    }
+
     @Override
     public String toString() {
         return String.valueOf(gold);

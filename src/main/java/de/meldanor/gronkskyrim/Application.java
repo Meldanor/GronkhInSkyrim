@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
+import java.io.File;
 import java.util.concurrent.Callable;
 
 public class Application implements Callable<Integer> {
@@ -56,8 +57,9 @@ public class Application implements Callable<Integer> {
         LOG.info("Starting post processing...");
         ParsedSeries series = new ParsedSeries(Config.POST_PROCESS_SERIES_LOG_PATH);
         SeriesEventLog eventLog = new SeriesEventLog(series);
-        CsvExport export = new CsvExport(eventLog);
-        export.call();
+        File file = new File("output.csv");
+        CsvExport.getInstance().exportTo(file, eventLog);
+
         LOG.info("Finished!");
     }
 }
