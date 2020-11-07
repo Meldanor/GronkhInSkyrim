@@ -33,4 +33,11 @@ public abstract class SeriesBase<T extends EpisodeBase> {
     public int getTotalEpisodeLengthSeconds() {
         return totalEpisodeLengthSeconds;
     }
+
+    @Override
+    public String toString() {
+        return "SeriesBase{" +
+                "totalEpisodeLengthSeconds=" + totalEpisodeLengthSeconds +
+                '}';
+    }
 }

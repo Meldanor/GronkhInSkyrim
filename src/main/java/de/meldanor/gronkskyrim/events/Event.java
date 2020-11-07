@@ -1,20 +1,20 @@
 package de.meldanor.gronkskyrim.events;
 
+import de.meldanor.gronkskyrim.data.EpisodeMoment;
 import de.meldanor.gronkskyrim.data.EventData;
 import de.meldanor.gronkskyrim.data.PlayerGold;
 import de.meldanor.gronkskyrim.data.PlayerWeight;
-import de.meldanor.gronkskyrim.ocr.Frame;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Event {
-    private final Frame frame;
+    private final EpisodeMoment moment;
     private PlayerWeight playerWeight;
     private PlayerGold playerGold;
 
-    public Event(Frame frame) {
-        this.frame = frame;
+    public Event(EpisodeMoment moment) {
+        this.moment = moment;
     }
 
     public void appendData(EventData<?> eventData) {
@@ -51,7 +51,16 @@ public class Event {
         throw new RuntimeException("Unsupported event data!");
     }
 
-    public int getFrameTime() {
-        return this.frame.episodeSecond();
+    public double getFrameTime() {
+        return this.moment.episodeSecond();
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "moment=" + moment +
+                ", playerWeight=" + playerWeight +
+                ", playerGold=" + playerGold +
+                '}';
     }
 }

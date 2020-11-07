@@ -32,6 +32,7 @@ public class ParsedEpisodeFactory {
         }
 
         return new ParsedEpisode(
+                file,
                 name,
                 index,
                 episodeLength,

@@ -55,7 +55,8 @@ public class Application implements Callable<Integer> {
     private void postprocess() throws Exception {
         LOG.info("Starting post processing...");
         ParsedSeries series = new ParsedSeries(Config.POST_PROCESS_SERIES_LOG_PATH);
-        CsvExport export = new CsvExport(series);
+        SeriesEventLog eventLog = new SeriesEventLog(series);
+        CsvExport export = new CsvExport(eventLog);
         export.call();
         LOG.info("Finished!");
     }

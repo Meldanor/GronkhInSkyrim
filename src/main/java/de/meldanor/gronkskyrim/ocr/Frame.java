@@ -1,54 +1,31 @@
 package de.meldanor.gronkskyrim.ocr;
 
-import de.meldanor.gronkskyrim.Config;
-import de.meldanor.gronkskyrim.source.SourceEpisode;
+import de.meldanor.gronkskyrim.data.EpisodeBase;
+import de.meldanor.gronkskyrim.data.EpisodeMoment;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-public class Frame {
+public class Frame extends EpisodeMoment {
 
-    private final SourceEpisode episode;
-    private final int index;
     private final File frameFile;
 
-    public Frame(SourceEpisode episode, File frameFile) {
-        this.episode = episode;
+    public Frame(EpisodeBase episode, File frameFile) {
+        super(episode, readIndex(frameFile));
         this.frameFile = frameFile;
-        this.index = readIndex(frameFile);
     }
 
-    private int readIndex(File frameFile) {
+    private static int readIndex(File frameFile) {
         String name = frameFile.getName();
         name = name.substring(0, name.indexOf('.'));
         return Integer.parseInt(name, 10);
-    }
-
-    public int episodeSecond() {
-        return this.index / Config.OCR_FRAMES_PER_SECOND;
-    }
-
-    public SourceEpisode getEpisode() {
-        return episode;
-    }
-
-    public int getIndex() {
-        return index;
     }
 
     public File getFrameFile() {
         return frameFile;
     }
 
-//    public InputStream clipFrame(int x, int y, int width, int height) throws Exception {
-//        BufferedImage image = ImageIO.read(this.getFrameFile());
-//        BufferedImage subimage = image.getSubimage(x, y, width, height);
-//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//        ImageIO.write(subimage, "png", stream);
-//        stream.flush();
-//        return new ByteArrayInputStream(stream.toByteArray());
-//    }
 
     public File clipFrame(int x, int y, int width, int height, File temporaryFolder) throws Exception {
         BufferedImage image = ImageIO.read(this.getFrameFile());

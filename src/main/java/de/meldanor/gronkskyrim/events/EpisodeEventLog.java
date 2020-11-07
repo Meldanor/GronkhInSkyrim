@@ -1,6 +1,7 @@
 package de.meldanor.gronkskyrim.events;
 
-import de.meldanor.gronkskyrim.source.SourceEpisode;
+import de.meldanor.gronkskyrim.data.EpisodeBase;
+import de.meldanor.gronkskyrim.postprocess.ParsedEpisode;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -21,12 +22,17 @@ import java.util.stream.Collectors;
  * The name of the file is define
  */
 public class EpisodeEventLog {
-    private final SourceEpisode episode;
-    private List<Event> events;
+    private final EpisodeBase episode;
+    private final List<Event> events;
 
-    public EpisodeEventLog(SourceEpisode episode) {
+    public EpisodeEventLog(EpisodeBase episode) {
         this.episode = episode;
         this.events = new ArrayList<>();
+    }
+
+    public EpisodeEventLog(ParsedEpisode episode) throws Exception {
+        this.episode = episode;
+        this.events = parseFrom(episode);
     }
 
     public void append(Event event) {
@@ -37,7 +43,7 @@ public class EpisodeEventLog {
         this.events.addAll(events);
     }
 
-    public SourceEpisode getEpisode() {
+    public EpisodeBase getEpisode() {
         return episode;
     }
 
@@ -71,5 +77,13 @@ public class EpisodeEventLog {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private List<Event> parseFrom(ParsedEpisode parsedEpisode) throws Exception {
+        File logFile = parsedEpisode.getLogFile();
+        return Files.lines(logFile.toPath())
+                .filter(Predicate.not(String::isBlank))
+                .map(line -> EventParser.getInstance().parse(parsedEpisode, line))
+                .collect(Collectors.toList());
     }
 }

@@ -15,9 +15,11 @@ import java.util.stream.Collectors;
 public class ParsedSeries extends SeriesBase<ParsedEpisode> {
 
     private static final ParsedEpisodeFactory EPISODE_FACTORY = ParsedEpisodeFactory.instance();
+    private final File seriesLogDir;
 
     public ParsedSeries(File seriesLogDir) throws Exception {
         super(seriesLogDir);
+        this.seriesLogDir = seriesLogDir;
     }
 
     @Override
@@ -26,5 +28,16 @@ public class ParsedSeries extends SeriesBase<ParsedEpisode> {
                 .map(p -> EPISODE_FACTORY.createEpisode(this, p.toFile()))
                 .sorted(Comparator.comparing(EpisodeBase::getIndex))
                 .collect(Collectors.toList());
+    }
+
+    public File getSeriesLogDir() {
+        return seriesLogDir;
+    }
+
+    @Override
+    public String toString() {
+        return "ParsedSeries{" +
+                "seriesLogDir=" + seriesLogDir +
+                "} " + super.toString();
     }
 }
