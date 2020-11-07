@@ -26,6 +26,7 @@ public class CsvExport {
         try (PrintWriter printer = new PrintWriter(Files.newBufferedWriter(file.toPath()))) {
             double frameTimeOffset = 0;
             for (EpisodeEventLog log : eventLog.getEventLogs()) {
+                log = EpisodeEventLogCompressor.getInstance().compress(log);
                 for (Event event : log.getEvents()) {
                     printer.print(event.getFrameTime() + frameTimeOffset);
                     printer.print(';');

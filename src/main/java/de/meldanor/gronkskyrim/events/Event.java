@@ -1,5 +1,8 @@
 package de.meldanor.gronkskyrim.events;
 
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hasher;
+import com.google.common.hash.Hashing;
 import de.meldanor.gronkskyrim.data.EpisodeMoment;
 import de.meldanor.gronkskyrim.data.EventData;
 import de.meldanor.gronkskyrim.data.PlayerGold;
@@ -8,6 +11,7 @@ import de.meldanor.gronkskyrim.data.PlayerWeight;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("UnstableApiUsage")
 public class Event {
     private final EpisodeMoment moment;
     private PlayerWeight playerWeight;
@@ -62,5 +66,25 @@ public class Event {
                 ", playerWeight=" + playerWeight +
                 ", playerGold=" + playerGold +
                 '}';
+    }
+
+
+    private final static HashFunction HASH_FUNCTION = Hashing.murmur3_32();
+
+    public int calculateHash() {
+        Hasher hasher = HASH_FUNCTION.newHasher();
+        if (this.playerGold != null) {
+            hasher.putInt(this.playerGold.getGold());
+        } else {
+            hasher.putInt(-1);
+        }
+
+        if (this.playerWeight != null) {
+            hasher.putInt(this.playerWeight.getCurrentWeight());
+            hasher.putInt(this.playerWeight.getMaximumWeight());
+        } else {
+            hasher.putInt(-1);
+        }
+        return hasher.hash().asInt();
     }
 }
