@@ -16,10 +16,33 @@ function spec(data: any): VisualizationSpec {
     data: {
       values: data,
     },
+    layer: [{
+      mark: { type: 'line', color: 'red', interpolate: 'step' },
+      encoding: {
+        y: { field: 'max', type: 'quantitative' },
+      },
+    }, {
+      mark: { type: 'line', interpolate: 'step' },
+      encoding: {
+        y: { field: 'cur', type: 'quantitative' },
+      },
+    }, {
+      mark: 'rule',
+      selection: {
+        hover: { type: 'single', on: 'mouseover', empty: 'none' },
+      },
+      encoding: {
+        color: {
+          condition: {
+            selection: { not: 'hover' }, value: 'transparent',
+          },
+        },
+      },
+    }],
     mark: { type: 'line', interpolate: 'step' },
     encoding: {
       x: {
-        field: 'timestamp',
+        field: 'time',
         type: 'quantitative',
         axis: {
           title: 'Zeit',
@@ -27,18 +50,11 @@ function spec(data: any): VisualizationSpec {
           labelFontSize: 16,
         },
       },
-      y: {
-        field: 'value',
-        type: 'quantitative',
-        axis: {
-          title: 'Gewicht',
-          labelAngle: 0,
-        },
-        scale: {
-          type: 'sqrt',
-        },
-      },
-      color: { field: 'type', type: 'nominal' },
+      tooltip: [
+        { field: 'time' },
+        { field: 'cur', type: 'quantitative' },
+        { field: 'max', type: 'quantitative' },
+      ],
     },
   };
 }

@@ -40,8 +40,7 @@ public class JsonExport {
                         break;
                     }
                     int time = (int) (event.getFrameTime() + frameTimeOffset);
-                    printWeight(printer, time, "Aktuel", weight.getCurrentWeight());
-                    printWeight(printer, time, "Maximum", weight.getMaximumWeight());
+                    printWeight(printer, time, weight);
 
                 }
                 frameTimeOffset += log.getEpisode().getLengthSeconds();
@@ -50,14 +49,13 @@ public class JsonExport {
         }
     }
 
-    private void printWeight(PrintWriter printer, int time, String field, int value) {
-        printer.print("{\"timestamp\":");
+    private void printWeight(PrintWriter printer, int time, PlayerWeight weight) {
+        printer.print("{\"time\":");
         printer.print(time);
-        printer.print(",\"type\":\"");
-        // { type: 'curWeight', timestamp: 2667, value: 119 }];
-        printer.print(field);
-        printer.print("\",\"value\":");
-        printer.print(value);
+        printer.print(",\"cur\":");
+        printer.print(weight.getCurrentWeight());
+        printer.print(",\"max\":");
+        printer.print(weight.getMaximumWeight());
         printer.println("},");
     }
 }
