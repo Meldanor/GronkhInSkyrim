@@ -6,13 +6,15 @@ import de.meldanor.gronkskyrim.events.EpisodeEventLog;
 import de.meldanor.gronkskyrim.events.Event;
 import de.meldanor.gronkskyrim.events.EventType;
 import de.meldanor.gronkskyrim.events.SeriesEventLog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 
 public class CsvExport {
-
+    private static final Logger LOG = LoggerFactory.getLogger(CsvExport.class.getSimpleName());
     private static final CsvExport INSTANCE = new CsvExport();
 
     public static CsvExport getInstance() {
@@ -23,11 +25,12 @@ public class CsvExport {
     }
 
     public void exportTo(File file, SeriesEventLog eventLog) throws Exception {
+        EpisodeEventLogCompressor compressor = new EpisodeEventLogCompressor();
         try (PrintWriter printer = new PrintWriter(Files.newBufferedWriter(file.toPath()))) {
             printer.println("Timestamp;CurWeight;MaxWeight;Gold");
             double frameTimeOffset = 0;
             for (EpisodeEventLog log : eventLog.getEventLogs()) {
-                log = EpisodeEventLogCompressor.getInstance().compress(log);
+                log = compressor.compress(log);
                 for (Event event : log.getEvents()) {
                     printer.print(event.getFrameTime() + frameTimeOffset);
                     printer.print(';');
@@ -49,5 +52,6 @@ public class CsvExport {
                 frameTimeOffset += log.getEpisode().getLengthSeconds();
             }
         }
+        LOG.info("Average compression: {}", compressor.getAverageCompressionString());
     }
 }

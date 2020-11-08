@@ -2,6 +2,7 @@ package de.meldanor.gronkskyrim.postprocess;
 
 import de.meldanor.gronkskyrim.events.EpisodeEventLog;
 import de.meldanor.gronkskyrim.events.Event;
+import de.meldanor.gronkskyrim.util.RunningAverage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,18 +21,15 @@ import java.util.List;
  * a clearer visualization because there are fewer data points at the same position in time.
  */
 public class EpisodeEventLogCompressor {
-    private static final EpisodeEventLogCompressor INSTANCE = new EpisodeEventLogCompressor();
-
-    private EpisodeEventLogCompressor() {
-
-    }
-
-    public static EpisodeEventLogCompressor getInstance() {
-        return INSTANCE;
-    }
 
     private static final Logger LOG = LoggerFactory.getLogger(EpisodeEventLogCompressor.class.getSimpleName());
     private static final NumberFormat PERCENTAGE = DecimalFormat.getPercentInstance();
+
+    private RunningAverage averageCompression;
+
+    public EpisodeEventLogCompressor() {
+        this.averageCompression = new RunningAverage();
+    }
 
     public EpisodeEventLog compress(EpisodeEventLog episodeEventLog) {
         if (episodeEventLog.getEvents().isEmpty()) {
@@ -47,7 +45,6 @@ public class EpisodeEventLogCompressor {
             int curHash = event.calculateHash();
             if (startHash != curHash) {
                 compressedEvents.add(start);
-                compressedEvents.add(event);
                 // Not at the end of log
                 if (i + 1 < events.size()) {
                     start = events.get(++i);
@@ -55,13 +52,21 @@ public class EpisodeEventLogCompressor {
                 }
             }
         }
-        compressedEvents.add(start);
         compressedEvents.add(events.get(events.size() - 1));
         double compression = (double) compressedEvents.size() / (double) events.size();
+        this.averageCompression.add(compression);
         LOG.info("Compress ration {} for {}", PERCENTAGE.format(compression), episodeEventLog.getEpisode());
         EpisodeEventLog compressedLog = new EpisodeEventLog(episodeEventLog.getEpisode());
         compressedLog.append(compressedEvents);
 
         return compressedLog;
+    }
+
+    public RunningAverage getAverageCompression() {
+        return averageCompression;
+    }
+
+    public String getAverageCompressionString() {
+        return PERCENTAGE.format(this.averageCompression.getCurAverage());
     }
 }
