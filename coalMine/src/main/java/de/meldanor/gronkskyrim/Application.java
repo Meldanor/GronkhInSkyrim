@@ -4,6 +4,7 @@ import de.meldanor.gronkskyrim.events.EpisodeEventLog;
 import de.meldanor.gronkskyrim.events.EventMiner;
 import de.meldanor.gronkskyrim.events.SeriesEventLog;
 import de.meldanor.gronkskyrim.postprocess.CsvExport;
+import de.meldanor.gronkskyrim.postprocess.JsonExport;
 import de.meldanor.gronkskyrim.postprocess.ParsedSeries;
 import de.meldanor.gronkskyrim.source.SourceEpisode;
 import de.meldanor.gronkskyrim.source.SourceSeries;
@@ -57,8 +58,10 @@ public class Application implements Callable<Integer> {
         LOG.info("Starting post processing...");
         ParsedSeries series = new ParsedSeries(Config.POST_PROCESS_SERIES_LOG_PATH);
         SeriesEventLog eventLog = new SeriesEventLog(series);
-        File file = new File("output.csv");
-        CsvExport.getInstance().exportTo(file, eventLog);
+//        File file = new File("output.csv");
+//        CsvExport.getInstance().exportTo(file, eventLog);
+        File fiel = new File("/Users/kiliangartner/IdeaProjects/private/gronkskyrim/frontend/src/components/output.json");
+        JsonExport.getInstance().exportTo(fiel, eventLog);
 
         LOG.info("Finished!");
     }

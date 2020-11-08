@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "vega": "^5.17.0",
+    "vega-embed": "^6.13.0",
+    "vega-lite": "^4.17.0",
     "vue": "^3.0.0",
-    "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
   },
