@@ -35,7 +35,7 @@ public class EpisodeEventLogCompressor {
 
     public EpisodeEventLog compress(EpisodeEventLog episodeEventLog) {
         if (episodeEventLog.getEvents().isEmpty()) {
-            LOG.warn("Nothing to compress");
+            LOG.info("Nothing to compress for {}", episodeEventLog.getEpisode());
             return episodeEventLog;
         }
         List<Event> compressedEvents = new ArrayList<>();
@@ -58,7 +58,7 @@ public class EpisodeEventLogCompressor {
         compressedEvents.add(start);
         compressedEvents.add(events.get(events.size() - 1));
         double compression = (double) compressedEvents.size() / (double) events.size();
-        LOG.info("Compress ration for episode {} is {}", episodeEventLog.getEpisode(), PERCENTAGE.format(compression));
+        LOG.info("Compress ration {} for {}", PERCENTAGE.format(compression), episodeEventLog.getEpisode());
         EpisodeEventLog compressedLog = new EpisodeEventLog(episodeEventLog.getEpisode());
         compressedLog.append(compressedEvents);
 

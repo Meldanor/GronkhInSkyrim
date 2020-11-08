@@ -24,6 +24,7 @@ public class CsvExport {
 
     public void exportTo(File file, SeriesEventLog eventLog) throws Exception {
         try (PrintWriter printer = new PrintWriter(Files.newBufferedWriter(file.toPath()))) {
+            printer.println("Timestamp;CurWeight;MaxWeight;Gold");
             double frameTimeOffset = 0;
             for (EpisodeEventLog log : eventLog.getEventLogs()) {
                 log = EpisodeEventLogCompressor.getInstance().compress(log);
