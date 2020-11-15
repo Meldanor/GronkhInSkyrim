@@ -56,13 +56,23 @@ public class JsonExport {
         LOG.info("Average compression: {}", compressor.getAverageCompressionString());
     }
 
+
     private void printWeight(PrintWriter printer, int time, PlayerWeight weight) {
         printer.print("{\"time\":");
         printer.print(time);
-        printer.print(",\"cur\":");
+        printer.print(",\"value\":");
         printer.print(weight.getCurrentWeight());
-        printer.print(",\"max\":");
+        printer.print(",\"type\":");
+        printer.print("\"cur\"");
+        printer.println("},");
+        printer.print("{\"time\":");
+        printer.print(time);
+        printer.print(",\"value\":");
         printer.print(weight.getMaximumWeight());
+        printer.print(",\"type\":");
+        printer.print("\"max\"");
         printer.println("},");
     }
+
+
 }

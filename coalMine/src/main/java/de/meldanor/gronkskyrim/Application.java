@@ -60,7 +60,7 @@ public class Application implements Callable<Integer> {
         SeriesEventLog eventLog = new SeriesEventLog(series);
 //        File file = new File("output.csv");
 //        CsvExport.getInstance().exportTo(file, eventLog);
-        File fiel = new File("/Users/kiliangartner/IdeaProjects/private/gronkskyrim/frontend/src/components/output.json");
+        File fiel = new File("/Users/kiliangartner/IdeaProjects/private/gronkskyrim/frontend/public/output.json");
         JsonExport.getInstance().exportTo(fiel, eventLog);
 
         LOG.info("Finished!");
