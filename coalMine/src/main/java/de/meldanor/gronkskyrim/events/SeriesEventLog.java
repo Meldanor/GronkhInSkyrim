@@ -2,6 +2,7 @@ package de.meldanor.gronkskyrim.events;
 
 import de.meldanor.gronkskyrim.data.EpisodeBase;
 import de.meldanor.gronkskyrim.data.SeriesBase;
+import de.meldanor.gronkskyrim.postprocess.EpisodeEventLogCompressor;
 import de.meldanor.gronkskyrim.postprocess.ParsedSeries;
 import de.meldanor.gronkskyrim.source.SourceSeries;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +23,13 @@ public class SeriesEventLog {
     private final File episodeLogDirectory;
     private final SeriesBase<? extends EpisodeBase> series;
     private List<EpisodeEventLog> eventLogs;
+
+    private SeriesEventLog(File episodeLogDirectory, SeriesBase<? extends EpisodeBase> series,
+                           List<EpisodeEventLog> eventLogs) {
+        this.episodeLogDirectory = episodeLogDirectory;
+        this.series = series;
+        this.eventLogs = eventLogs;
+    }
 
     public SeriesEventLog(SourceSeries series, File logDirectory) {
         this.series = series;
@@ -70,15 +79,17 @@ public class SeriesEventLog {
         return eventLogs;
     }
 
-    //    public void writeTo(File directory) {
-//        LOG.info("Writing series event log to '{}'...", directory);
-//
-//        for (int i = 0; i < eventLogs.size(); i++) {
-//            EpisodeEventLog eventLog = eventLogs.get(i);
-//            File f = new File(directory, eventLog.getLogName());
-//            LOG.info("({}/{}) Writing event log to {}", i + 1, eventLogs.size(), f);
-//            eventLog.writeTo(f);
-//        }
-//        LOG.info("Finished writing series event log to '{}'...", directory);
-//    }
+    public List<EpisodeEventLog> getCompressedEventLogs() {
+        EpisodeEventLogCompressor compressor = new EpisodeEventLogCompressor();
+        return this.eventLogs
+                .stream()
+                .map(compressor::compress)
+                .collect(Collectors.toList());
+    }
+
+    public SeriesEventLog compress() {
+        List<EpisodeEventLog> eventLogs = this.getCompressedEventLogs();
+        return new SeriesEventLog(this.episodeLogDirectory, this.series, eventLogs);
+    }
+
 }

@@ -6,6 +6,7 @@ import de.meldanor.gronkskyrim.events.SeriesEventLog;
 import de.meldanor.gronkskyrim.postprocess.CsvExport;
 import de.meldanor.gronkskyrim.postprocess.JsonExport;
 import de.meldanor.gronkskyrim.postprocess.ParsedSeries;
+import de.meldanor.gronkskyrim.serialize.FrontendExport;
 import de.meldanor.gronkskyrim.source.SourceEpisode;
 import de.meldanor.gronkskyrim.source.SourceSeries;
 import org.slf4j.Logger;
@@ -60,8 +61,9 @@ public class Application implements Callable<Integer> {
         SeriesEventLog eventLog = new SeriesEventLog(series);
 //        File file = new File("output.csv");
 //        CsvExport.getInstance().exportTo(file, eventLog);
-        File fiel = new File("/Users/kiliangartner/IdeaProjects/private/gronkskyrim/frontend/public/output.json");
-        JsonExport.getInstance().exportTo(fiel, eventLog);
+        File file = new File("/Users/kiliangartner/IdeaProjects/private/gronkskyrim/frontend/public");
+        FrontendExport frontendExport = new FrontendExport();
+        frontendExport.exportTo(eventLog, file);
 
         LOG.info("Finished!");
     }

@@ -9,12 +9,15 @@ import embed, { VisualizationSpec } from 'vega-embed';
 
 function spec(): VisualizationSpec {
   return {
+    config: {
+      background: '#333',
+      title: { color: '#fff' },
+      style: { 'guide-label': { fill: '#fff' }, 'guide-title': { fill: '#fff' } },
+      axis: { domainColor: '#fff', gridColor: '#888', tickColor: '#fff' }
+    },
     $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
     width: 'container',
     height: 'container',
-    data: {
-      url: 'https://gist.githubusercontent.com/Meldanor/c7ffa26de69c5854f2b580e639ecc9b1/raw/3e7eaf1da853e6bdc3c584fe393c52e096d10d37/output.json'
-    },
     selection: {
       grid: {
         type: 'interval',
@@ -22,42 +25,51 @@ function spec(): VisualizationSpec {
         encodings: ['x']
       }
     },
+    data: {
+      url: '/weights.json'
+    },
     transform: [
-      { sample: 2000 }
+      { sample: 1000 }
     ],
     mark: { type: 'line', interpolate: 'step' },
     encoding: {
       x: {
-        field: 'time',
+        field: 'timestamp',
         type: 'quantitative',
         axis: {
-          title: 'Zeit',
-          labelAngle: 0,
-          labelFontSize: 16
+          title: 'Zeitstempel in Sekunden',
+          titleFontSize: 16,
+          labelFontSize: 12
         },
         scale: {
           domainMin: 0
         }
-
       },
       y: {
         field: 'value',
-        type: 'quantitative'
+        type: 'quantitative',
+        axis: {
+          title: 'Gewicht',
+          titleFontSize: 16,
+          labelFontSize: 12
+        }
       },
       color: {
-        field: 'type'
-      },
-      tooltip: [
-        { field: 'value', type: 'quantitative', title: 'Wert' },
-        { field: 'type', type: 'nominal', title: 'Typ' }
-      ]
+        field: 'type',
+        legend: {
+          labelExpr: "datum.value == 'cur' ? 'Aktuell' : 'Maximual'",
+          title: '',
+          labelFontSize: 16
+        },
+        scale: { range: ['#1f77b4', '#d62728'] }
+      }
     }
   };
 }
 
 export default defineComponent({
   name: 'WeightStatistics',
-  setup(props) {
+  setup() {
     embed('#player-weight-stats', spec(), { actions: true });
   },
 });
