@@ -1,5 +1,5 @@
 <template>
-  <div id="player-weight-stats" style="width: 100vw; height: 40rem">
+  <div id="player-weight-stats" style="width: 100%; height: 40rem">
   </div>
 </template>
 
@@ -18,6 +18,7 @@ function spec(): VisualizationSpec {
     $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
     width: 'container',
     height: 'container',
+    title: 'Gewicht',
     selection: {
       grid: {
         type: 'interval',

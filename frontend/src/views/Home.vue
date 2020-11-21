@@ -1,18 +1,27 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <h2>
+      Statistiken und nackte Fakten
+    </h2>
+    <weight-statistic/>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import WeightStatistic from '@/components/WeightStatistic.vue';
 
 export default defineComponent({
   name: 'Home',
   components: {
-    HelloWorld,
+    WeightStatistic
   },
 });
 </script>
+
+<style lang="scss">
+.home {
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+</style>
