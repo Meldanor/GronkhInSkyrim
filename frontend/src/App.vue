@@ -1,13 +1,27 @@
 <template>
   <h1>
-    <a href="https://www.twitch.tv/gronkh">Erik/Gronkh</a> in <a href="https://grnk.yt/skyrim">Skyrim</a>
+    <external-link link="https://www.twitch.tv/gronkh" text="Erik/Gronkh"/>
+    in
+    <external-link link="https://grnk.yt/skyrim" text="Skyrim"/>
   </h1>
   <div id="nav">
     <router-link to="/">Statistiken</router-link> |
-    <router-link to="/about">Warum?</router-link>
+    <router-link to="/about">Wat?/Warum?</router-link>
   </div>
   <router-view/>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import ExternalLink from '@/components/ExternalLink.vue';
+
+export default defineComponent({
+  name: 'App',
+  components: {
+    ExternalLink
+  },
+});
+</script>
 
 <style lang="scss">
 #app {
@@ -15,13 +29,13 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #1c1e10;
 }
 #nav {
   padding: 30px;
   a {
     font-weight: bold;
-    color: #2c3e50;
+    color: #1c1e10;
 
     &.router-link-exact-active {
       color: #42b983;
@@ -33,5 +47,6 @@ a:visited {
 }
 a {
   text-decoration: underline;
+  color: #2c2e20;
 }
 </style>
