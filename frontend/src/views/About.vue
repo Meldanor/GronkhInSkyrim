@@ -99,6 +99,10 @@
       geschrieben.
     </i>
     <p>
+      Ihr findet den Quellcode auf
+      <external-link link="https://github.com/Meldanor/GronkhInSkyrim" text="GitHub"/>
+    </p>
+    <p>
       Zum Zeitpunkt dieses Textes habe ich 300 Episoden analyisiert. Da mir 1080p als Auflösung
       reicht, belegen diese "nur" 330 GB auf meinem NAS. Mit ffmpeg und Tessaract hatte ich
       die zwei Haupttools, nun mussten diese mit einem eigenen Tool zusammengeklebt und die Daten
