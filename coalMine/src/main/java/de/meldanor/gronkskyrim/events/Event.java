@@ -7,6 +7,7 @@ import de.meldanor.gronkskyrim.data.EpisodeMoment;
 import de.meldanor.gronkskyrim.data.EventData;
 import de.meldanor.gronkskyrim.data.PlayerGold;
 import de.meldanor.gronkskyrim.data.PlayerWeight;
+import de.meldanor.gronkskyrim.serialize.dto.EventDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,5 +87,9 @@ public class Event {
             hasher.putInt(-1);
         }
         return hasher.hash().asInt();
+    }
+
+    public EventDto toSerializable() {
+        return new EventDto(this);
     }
 }

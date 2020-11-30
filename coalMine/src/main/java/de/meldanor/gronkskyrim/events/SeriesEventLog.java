@@ -12,7 +12,6 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,7 +59,7 @@ public class SeriesEventLog {
         this.eventLogs.add(episodeEventLog);
         File f = new File(this.episodeLogDirectory, episodeEventLog.getLogName());
         LOG.info(" Writing event log of episode {} to {}", episodeEventLog.getEpisode(), f);
-        episodeEventLog.writeTo(f);
+        episodeEventLog.writeToJson(f);
     }
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd'__'HHmmss");

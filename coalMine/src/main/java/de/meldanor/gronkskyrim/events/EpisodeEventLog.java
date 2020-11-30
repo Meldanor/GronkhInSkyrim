@@ -1,10 +1,11 @@
 package de.meldanor.gronkskyrim.events;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.meldanor.gronkskyrim.data.EpisodeBase;
 import de.meldanor.gronkskyrim.postprocess.ParsedEpisode;
+import de.meldanor.gronkskyrim.serialize.dto.EpisodeEventLogDto;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,24 +57,15 @@ public class EpisodeEventLog {
      */
     public String getLogName() {
         String indexString = String.format("%04d", this.episode.getIndex());
-        return indexString + "__" + this.episode.getLengthSeconds() + "s__" + this.episode.getName() + ".txt";
+        return indexString + "__" + this.episode.getLengthSeconds() + "s__" + this.episode.getName() + ".json";
     }
 
-    public void writeTo(File file) {
-        try (PrintWriter printer = new PrintWriter(Files.newBufferedWriter(file.toPath()))) {
-            for (Event event : events) {
-                String line = event.getData()
-                        .stream()
-                        .map(eventData -> eventData.getEventType().name() + "=" + eventData.toEventLogString())
-                        .filter(Predicate.not(String::isBlank))
-                        .collect(Collectors.joining(";;;"));
-                if (!line.isBlank()) {
-                    printer.print("EPISODE_TIME_STAMP=");
-                    printer.print(event.getFrameTime());
-                    printer.print(";;;");
-                    printer.println(line);
-                }
-            }
+    private static final ObjectMapper JSON = new ObjectMapper();
+
+    public void writeToJson(File file) {
+        try {
+            EpisodeEventLogDto dto = new EpisodeEventLogDto(this);
+            JSON.writeValue(file, dto);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

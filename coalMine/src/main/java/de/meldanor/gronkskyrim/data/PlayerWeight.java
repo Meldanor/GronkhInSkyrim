@@ -2,8 +2,9 @@ package de.meldanor.gronkskyrim.data;
 
 import de.meldanor.gronkskyrim.events.EventType;
 import de.meldanor.gronkskyrim.ocr.ParseException;
+import de.meldanor.gronkskyrim.serialize.dto.EventDataDto;
+import de.meldanor.gronkskyrim.serialize.dto.PlayerWeightDto;
 
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,7 +25,7 @@ public class PlayerWeight implements EventData<PlayerWeight> {
         }
     }
 
-    private PlayerWeight(int currentWeight, int maximumWeight) {
+    public PlayerWeight(int currentWeight, int maximumWeight) {
         this.currentWeight = currentWeight;
         this.maximumWeight = maximumWeight;
     }
@@ -43,25 +44,12 @@ public class PlayerWeight implements EventData<PlayerWeight> {
     }
 
     @Override
-    public String toEventLogString() {
-        return toString();
-    }
-
-    private static final Pattern EVENT_LOG_PATTERN = Pattern.compile("PLAYER_WEIGHT=(\\d+)/(\\d+)");
-
-    public static Optional<PlayerWeight> fromEventLogString(String eventLogString) {
-        Matcher matcher = EVENT_LOG_PATTERN.matcher(eventLogString);
-        if (matcher.find()) {
-            int currentWeight = Integer.parseInt(matcher.group(1));
-            int maximumWeight = Integer.parseInt(matcher.group(2));
-            return Optional.of(new PlayerWeight(currentWeight, maximumWeight));
-        } else {
-            return Optional.empty();
-        }
+    public EventType getEventType() {
+        return EventType.PLAYER_WEIGHT;
     }
 
     @Override
-    public EventType getEventType() {
-        return EventType.PLAYER_WEIGHT;
+    public EventDataDto toSerializable() {
+        return new PlayerWeightDto(this);
     }
 }
