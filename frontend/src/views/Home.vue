@@ -1,8 +1,9 @@
 <template>
   <div class="home">
-    <h2>
+    <h3 class="title is-3">
       Statistiken und nackte Fakten
-    </h2>
+    </h3>
+    <h4 class="subtitle is-4">Gewicht</h4>
     <weight-statistic/>
   </div>
 </template>

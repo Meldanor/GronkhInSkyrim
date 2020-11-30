@@ -10,6 +10,7 @@
     "deploy": "docker build -t gronkhsykrim:$npm_package_version -f docker/Dockerfile . && docker save gronkhsykrim:$npm_package_version | bzip2 | ssh root@www.meldanor.me 'bunzip2 | docker load'"
   },
   "dependencies": {
+    "bulma": "^0.9.1",
     "compression-webpack-plugin": "^6.1.1",
     "core-js": "^3.6.5",
     "vega": "^5.17.0",

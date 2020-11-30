@@ -1,5 +1,5 @@
 <template>
-  <h1>
+  <h1 class="title is-1">
     <external-link link="https://www.twitch.tv/gronkh" text="Erik/Gronkh"/>
     in
     <external-link link="https://grnk.yt/skyrim" text="Skyrim"/>
@@ -24,6 +24,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+
+h1 {
+  margin-top: 2rem !important;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -36,6 +40,7 @@ export default defineComponent({
   a {
     font-weight: bold;
     color: #1c1e10;
+    text-decoration: underline;
 
     &.router-link-exact-active {
       color: #42b983;

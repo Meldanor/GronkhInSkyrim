@@ -1,7 +1,7 @@
 <template>
   <div class="about">
-    <h2>Ist das ein Amulett von Mara? (FAQ)</h2>
-    <h3>Warum</h3>
+    <h3 class="title is-3">Ist das ein Amulett von Mara? (FAQ)</h3>
+    <h4 class="subtitle is-4">Warum?</h4>
     <i>
       TL;DR: Weil ich mich mit
       <external-link link="https://de.wikipedia.org/wiki/Texterkennung" text="OCR"/>
@@ -57,7 +57,7 @@
       weitere!) geben ihr bestes, die Stimmung zu erheben. Da dachte ich mir - wenn ich eine kleine
       witzige Seite erstelle, kann ich meinen Teil auch dazu beitragen?
     </p>
-    <h3>Wird es mehr geben</h3>
+    <h4 class="subtitle is-4">Wird es mehr geben?</h4>
     <p>
       Ich weiß es nicht. Das Projekt brauchte ein paar Wochen mit immer mal wieder ein bis vier
       Stunden Arbeit. Im aktuellen Log (siehe unten für Details) habe ich bisher nur Gewicht
@@ -67,7 +67,9 @@
     </p>
     <p>
       Weitere Ideen waren noch:
-      <ul>
+    </p>
+    <div class="content">
+      <ul class="has-text-left">
         <li>Skills – bei Skillsteigerungen gibt es eine feste Einblendung in der Mitte</li>
         <li>
           Weg des Helden – bei <b>Zelda: Breath of the Wild</b> gibt es eine Historie, wo Link
@@ -76,8 +78,8 @@
           ähnliches machen.
         </li>
       </ul>
-    </p>
-    <h3>Wer</h3>
+    </div>
+    <h4 class="subtitle is-4">Wer?</h4>
     <p>
       Mein Name ist Kilian Gärtner und ich programmiere seit 10+ Jahren
       unterschiedlichen Kram. Mehr dazu findet man auf
@@ -86,7 +88,7 @@
       großes Fragezeichen bei mir. Die Theorie dazu kann ich ein wenig, aber praktisch hatte ich
       fast nie Kontakt damit.
     </p>
-    <h3>Wie</h3>
+    <h4 class="subtitle is-4">Wie?</h4>
     <i>
       TL;DR: Mit
       <external-link link="https://ffmpeg.org/" text="ffmpeg"/> einzelne Frames aus den Videos
@@ -203,15 +205,21 @@ export default defineComponent({
   margin-right: auto;
   margin-left: auto;
 }
-h3 {
+h4 {
   text-align: left;
   text-decoration: underline;
   margin-top: 2.5rem;
+  margin-bottom: 1rem;
 }
-h3:after {
-  content: "?";
+
+i {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
+
 p {
   text-align: justify;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
 }
 </style>

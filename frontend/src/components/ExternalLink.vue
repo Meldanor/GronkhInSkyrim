@@ -16,6 +16,8 @@ export default defineComponent({
 
 </script>
 
-<style scoped>
-
+<style >
+a {
+  text-decoration: underline
+}
 </style>
