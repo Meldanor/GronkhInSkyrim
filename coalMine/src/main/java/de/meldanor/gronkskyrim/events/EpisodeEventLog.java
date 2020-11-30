@@ -1,16 +1,16 @@
 package de.meldanor.gronkskyrim.events;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.meldanor.gronkskyrim.data.EpisodeBase;
 import de.meldanor.gronkskyrim.postprocess.ParsedEpisode;
 import de.meldanor.gronkskyrim.serialize.dto.EpisodeEventLogDto;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static de.meldanor.gronkskyrim.Util.JSON;
 
 /**
  * Represents the log of events of a single Episode. The log is a time sorted list of events.
@@ -60,8 +60,6 @@ public class EpisodeEventLog {
         return indexString + "__" + this.episode.getLengthSeconds() + "s__" + this.episode.getName() + ".json";
     }
 
-    private static final ObjectMapper JSON = new ObjectMapper();
-
     public void writeToJson(File file) {
         try {
             EpisodeEventLogDto dto = new EpisodeEventLogDto(this);
@@ -73,9 +71,10 @@ public class EpisodeEventLog {
 
     private List<Event> parseFrom(ParsedEpisode parsedEpisode) throws Exception {
         File logFile = parsedEpisode.getLogFile();
-        return Files.lines(logFile.toPath())
-                .filter(Predicate.not(String::isBlank))
-                .map(line -> EventParser.getInstance().parse(parsedEpisode, line))
+        EpisodeEventLogDto dto = JSON.readValue(logFile, EpisodeEventLogDto.class);
+        return dto.getEvents().stream()
+                .map(eventDto -> eventDto.toOriginal(parsedEpisode))
+                .sorted(Comparator.comparing(Event::getFrameTime))
                 .collect(Collectors.toList());
     }
 }

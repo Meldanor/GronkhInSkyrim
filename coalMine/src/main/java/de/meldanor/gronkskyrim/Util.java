@@ -1,5 +1,7 @@
 package de.meldanor.gronkskyrim;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -19,4 +21,5 @@ public class Util {
         return String.join("", list);
     }
 
+    public static final ObjectMapper JSON = new ObjectMapper();
 }

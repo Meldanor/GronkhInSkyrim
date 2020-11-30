@@ -1,6 +1,7 @@
 package de.meldanor.gronkskyrim.postprocess;
 
 import de.meldanor.gronkskyrim.data.EpisodeBase;
+import de.meldanor.gronkskyrim.serialize.dto.EpisodeBaseDto;
 
 import java.io.File;
 
@@ -10,8 +11,8 @@ import java.io.File;
 public class ParsedEpisode extends EpisodeBase {
     private final File logFile;
 
-    protected ParsedEpisode(File logFile, String name, int index, int lengthSeconds, ParsedSeries series) {
-        super(name, index, lengthSeconds, series);
+    protected ParsedEpisode(File logFile, EpisodeBaseDto episodeBaseDto, ParsedSeries series) {
+        super(episodeBaseDto.getName(), episodeBaseDto.getIndex(), episodeBaseDto.getLengthSeconds(), series);
         this.logFile = logFile;
     }
 

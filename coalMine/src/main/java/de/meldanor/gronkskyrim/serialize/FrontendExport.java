@@ -1,6 +1,5 @@
 package de.meldanor.gronkskyrim.serialize;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.meldanor.gronkskyrim.data.EpisodeBase;
 import de.meldanor.gronkskyrim.data.PlayerWeight;
 import de.meldanor.gronkskyrim.events.EpisodeEventLog;
@@ -13,11 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static de.meldanor.gronkskyrim.Util.JSON;
+
 /**
  * Exports a series log in a format that the frontend can work with it
  */
 public class FrontendExport {
-    private final ObjectMapper mapper = new ObjectMapper();
 
     public void exportTo(SeriesEventLog seriesEventLog, File targetDir) throws Exception {
         seriesEventLog = seriesEventLog.compress();
@@ -27,7 +27,7 @@ public class FrontendExport {
 
     private void writeSeriesData(SeriesEventLog seriesEventLog, File dir) throws Exception {
         List<Map<String, Object>> mapWeight = mapEpisodeMeta(seriesEventLog);
-        mapper.writeValue(new File(dir, "series_meta.json"), mapWeight);
+        JSON.writeValue(new File(dir, "series_meta.json"), mapWeight);
     }
 
     private List<Map<String, Object>> mapEpisodeMeta(SeriesEventLog seriesEventLog) {
@@ -47,7 +47,7 @@ public class FrontendExport {
 
     private void writeWeightData(SeriesEventLog seriesEventLog, File dir) throws Exception {
         List<Map<String, Object>> mapWeight = mapWeight(seriesEventLog.getEventLogs());
-        mapper.writeValue(new File(dir, "weights.json"), mapWeight);
+        JSON.writeValue(new File(dir, "weights.json"), mapWeight);
     }
 
     private List<Map<String, Object>> mapWeight(List<EpisodeEventLog> episodeEventLogs) {
