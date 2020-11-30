@@ -3,7 +3,7 @@
     <h3 class="title is-3">
       Statistiken und nackte Fakten
     </h3>
-    <h4 class="subtitle is-4">Gewicht</h4>
+    <series-data/>
     <weight-statistic/>
   </div>
 </template>
@@ -11,10 +11,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import WeightStatistic from '@/components/WeightStatistic.vue';
+import SeriesData from '@/components/SeriesData.vue';
 
 export default defineComponent({
   name: 'Home',
   components: {
+    SeriesData,
     WeightStatistic
   },
 });

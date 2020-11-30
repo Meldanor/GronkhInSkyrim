@@ -16,7 +16,7 @@ export default defineComponent({
 
 </script>
 
-<style >
+<style lang="scss">
 a {
   text-decoration: underline
 }
