@@ -15,8 +15,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -25,7 +27,9 @@ import static de.meldanor.gronkskyrim.ocr.Tesseract.PAGE_SEGMENTATION_MODE_SINGL
 public class EventMiner {
 
     private static final Logger LOG = LoggerFactory.getLogger(EventMiner.class.getSimpleName());
-
+    // Use only 75% of common fork pool because tesseract exhausts the CPU and blocks the progress with
+    // context switches
+    private static final int PARALLELISM = (ForkJoinPool.getCommonPoolParallelism() * 3) / 4;
     private final FrameExtractor frameExtractor;
 
     public EventMiner() {
@@ -39,15 +43,19 @@ public class EventMiner {
         File temporaryFolder;
         try {
             temporaryFolder = Files.createTempDirectory("" + episode.getIndex()).toFile();
-            List<Event> events = Files.list(framesDir.toPath())
+            List<Path> list = Files.list(framesDir.toPath()).collect(Collectors.toList());
+            ForkJoinPool reducedPool = new ForkJoinPool(PARALLELISM);
+            List<Event> events = reducedPool.submit(() -> list
+                    .parallelStream()
                     .map(path -> new Frame(episode, path.toFile()))
-                    .parallel()
                     .map(frame -> mineEventsOfFrame(frame, temporaryFolder))
                     .collect(Collectors.toList())
+            )
+                    .get()
                     .stream()
                     .sorted(Comparator.comparing(Event::getFrameTime))
                     .collect(Collectors.toList());
-
+            reducedPool.shutdownNow();
             log.append(events);
         } catch (Exception e) {
             throw new RuntimeException(e);
