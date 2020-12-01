@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static de.meldanor.gronkskyrim.ocr.Tesseract.PAGE_SEGMENTATION_MODE_SINGLE_LINE;
+
 public class EventMiner {
 
     private static final Logger LOG = LoggerFactory.getLogger(EventMiner.class.getSimpleName());
@@ -101,7 +103,7 @@ public class EventMiner {
     private String playerWeightGoldString(Frame frame, File temporaryFolder) throws Exception {
         // Coords are from a 1080p video the position of the armor, weight and gold
         File file = frame.clipFrame(1090, 980, 650, 60, temporaryFolder);
-        return Tesseract.instance().extractText(file);
+        return Tesseract.instance().extractText(file, PAGE_SEGMENTATION_MODE_SINGLE_LINE);
     }
 
     private void cleanUpTemporaryFiles(File temporaryFolder) {
