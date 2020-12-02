@@ -1,6 +1,7 @@
 package de.meldanor.gronkskyrim.serialize;
 
 import de.meldanor.gronkskyrim.data.EpisodeBase;
+import de.meldanor.gronkskyrim.data.PlayerGold;
 import de.meldanor.gronkskyrim.data.PlayerWeight;
 import de.meldanor.gronkskyrim.events.EpisodeEventLog;
 import de.meldanor.gronkskyrim.events.Event;
@@ -22,6 +23,7 @@ public class FrontendExport {
     public void exportTo(SeriesEventLog seriesEventLog, File targetDir) throws Exception {
         seriesEventLog = seriesEventLog.compress();
         writeWeightData(seriesEventLog, targetDir);
+        writeGoldData(seriesEventLog, targetDir);
         writeSeriesData(seriesEventLog, targetDir);
     }
 
@@ -74,6 +76,35 @@ public class FrontendExport {
                                     "type", "max"
                             )
 
+                    );
+                }
+            }
+
+            timeOffset += episode.getLengthSeconds();
+        }
+        return episodeData;
+    }
+
+    private void writeGoldData(SeriesEventLog seriesEventLog, File dir) throws Exception {
+        List<Map<String, Object>> mapWeight = mapGold(seriesEventLog.getEventLogs());
+        JSON.writeValue(new File(dir, "gold.json"), mapWeight);
+    }
+
+    private List<Map<String, Object>> mapGold(List<EpisodeEventLog> episodeEventLogs) {
+        long timeOffset = 0;
+        List<Map<String, Object>> episodeData = new ArrayList<>();
+        for (EpisodeEventLog eventLog : episodeEventLogs) {
+            EpisodeBase episode = eventLog.getEpisode();
+            List<Event> events = eventLog.getEvents();
+            for (Event event : events) {
+                PlayerGold playerGold = (PlayerGold) event.getDatum(EventType.PLAYER_GOLD);
+                if (playerGold != null) {
+                    episodeData.add(
+                            Map.of(
+                                    "timestamp", timeOffset,
+                                    "value", playerGold.getGold(),
+                                    "type", "cur"
+                            )
                     );
                 }
             }

@@ -3,8 +3,9 @@
     <h3 class="title is-3">
       Statistiken und nackte Fakten
     </h3>
-    <series-data/>
-    <weight-statistic/>
+    <series-data />
+    <weight-statistic style="margin-top: 2rem"/>
+    <gold-statistic style="margin-top: 2.5rem"/>
   </div>
 </template>
 
@@ -12,10 +13,12 @@
 import { defineComponent } from 'vue';
 import WeightStatistic from '@/components/WeightStatistic.vue';
 import SeriesData from '@/components/SeriesData.vue';
+import GoldStatistic from '@/components/GoldStatistic.vue';
 
 export default defineComponent({
   name: 'Home',
   components: {
+    GoldStatistic,
     SeriesData,
     WeightStatistic
   },

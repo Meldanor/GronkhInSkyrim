@@ -80,10 +80,12 @@ public class SeriesEventLog {
 
     public List<EpisodeEventLog> getCompressedEventLogs() {
         EpisodeEventLogCompressor compressor = new EpisodeEventLogCompressor();
-        return this.eventLogs
+        List<EpisodeEventLog> eventLogs = this.eventLogs
                 .stream()
                 .map(compressor::compress)
                 .collect(Collectors.toList());
+        LOG.info("{} avg. compression rate", compressor.getAverageCompressionString());
+        return eventLogs;
     }
 
     public SeriesEventLog compress() {

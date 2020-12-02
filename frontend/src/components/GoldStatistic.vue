@@ -1,5 +1,5 @@
 <template>
-  <div id="player-weight-stats" style="width: 100%; height: 40rem">
+  <div id="player-gold-stats" style="width: 100%; height: 40rem">
   </div>
 </template>
 
@@ -18,7 +18,7 @@ function spec(): VisualizationSpec {
     $schema: 'https://vega.github.io/schema/vega-lite/v4.json',
     width: 'container',
     height: 'container',
-    title: 'Gewicht',
+    title: 'Gold',
     selection: {
       grid: {
         type: 'interval',
@@ -27,13 +27,13 @@ function spec(): VisualizationSpec {
       }
     },
     data: {
-      url: '/weights.json'
+      url: '/gold.json'
     },
     transform: [
       { sample: 1000 },
       { calculate: 'datum.timestamp/3600', as: 'hour' }
     ],
-    mark: { type: 'line', interpolate: 'step' },
+    mark: { type: 'line', interpolate: 'step', color: 'goldenrod' },
     encoding: {
       x: {
         field: 'hour',
@@ -51,28 +51,19 @@ function spec(): VisualizationSpec {
         field: 'value',
         type: 'quantitative',
         axis: {
-          title: 'Gewicht',
+          title: 'Gold',
           titleFontSize: 16,
           labelFontSize: 12
         }
-      },
-      color: {
-        field: 'type',
-        legend: {
-          labelExpr: "datum.value == 'cur' ? 'Aktuell' : 'Maximual'",
-          title: '',
-          labelFontSize: 16
-        },
-        scale: { range: ['#1f77b4', '#d62728'] }
       }
     }
   };
 }
 
 export default defineComponent({
-  name: 'WeightStatistics',
+  name: 'GoldStatistics',
   setup() {
-    embed('#player-weight-stats', spec(), { actions: true });
+    embed('#player-gold-stats', spec(), { actions: true });
   },
 });
 
