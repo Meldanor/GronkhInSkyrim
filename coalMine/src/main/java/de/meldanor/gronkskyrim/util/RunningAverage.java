@@ -1,6 +1,11 @@
 package de.meldanor.gronkskyrim.util;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 public class RunningAverage {
+
+    private static final NumberFormat PERCENTAGE = DecimalFormat.getPercentInstance();
 
     private double n = 0.0;
     private double curAverage = 0.0;
@@ -12,6 +17,10 @@ public class RunningAverage {
 
     public double getCurAverage() {
         return curAverage;
+    }
+
+    public String getAsPercentage() {
+        return PERCENTAGE.format(curAverage);
     }
 
     @Override

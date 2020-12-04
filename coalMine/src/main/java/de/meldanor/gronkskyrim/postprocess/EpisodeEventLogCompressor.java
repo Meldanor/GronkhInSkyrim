@@ -1,7 +1,9 @@
 package de.meldanor.gronkskyrim.postprocess;
 
+import de.meldanor.gronkskyrim.data.EventData;
 import de.meldanor.gronkskyrim.events.EpisodeEventLog;
 import de.meldanor.gronkskyrim.events.Event;
+import de.meldanor.gronkskyrim.events.EventType;
 import de.meldanor.gronkskyrim.util.RunningAverage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +12,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The classes removes redundant Events from an EpisodeEventLog. If there is no change between two timestamps only
@@ -25,48 +28,70 @@ public class EpisodeEventLogCompressor {
     private static final Logger LOG = LoggerFactory.getLogger(EpisodeEventLogCompressor.class.getSimpleName());
     private static final NumberFormat PERCENTAGE = DecimalFormat.getPercentInstance();
 
-    private RunningAverage averageCompression;
-
-    public EpisodeEventLogCompressor() {
-        this.averageCompression = new RunningAverage();
-    }
-
-    public EpisodeEventLog compress(EpisodeEventLog episodeEventLog) {
-        if (episodeEventLog.getEvents().isEmpty()) {
-            LOG.info("Nothing to compress for {}", episodeEventLog.getEpisode());
+    public EpisodeEventLog compress(EpisodeEventLog episodeEventLog, RunningAverage averageCompression) {
+        List<Event> events = episodeEventLog.getEvents();
+        if (events.isEmpty()) {
+            LOG.debug("Nothing to compress for {}", episodeEventLog.getEpisode());
             return episodeEventLog;
         }
-        List<Event> compressedEvents = new ArrayList<>();
+        List<Event> compressedEvents = compressEvents(events);
+        return postCompress(compressedEvents, events, episodeEventLog, averageCompression);
+    }
+
+    public EpisodeEventLog compress(EpisodeEventLog episodeEventLog, EventType eventType,
+                                    RunningAverage averageCompression) {
         List<Event> events = episodeEventLog.getEvents();
+        if (events.isEmpty()) {
+            LOG.debug("Nothing to compress for {}", episodeEventLog.getEpisode());
+            return episodeEventLog;
+        }
+        List<Event> compressedEvents = compressByTypeEvents(events, eventType);
+        return postCompress(compressedEvents, events, episodeEventLog, averageCompression);
+    }
+
+    private List<Event> compressEvents(List<Event> events) {
+        List<Event> compressedEvents = new ArrayList<>();
         Event start = events.get(0);
-        int startHash = start.calculateHash();
         for (int i = 1; i < events.size(); i++) {
             Event event = events.get(i);
-            int curHash = event.calculateHash();
-            if (startHash != curHash) {
+            if (!start.hasSameData(event)) {
                 compressedEvents.add(start);
                 // Not at the end of log
                 if (i + 1 < events.size()) {
                     start = events.get(++i);
-                    startHash = start.calculateHash();
                 }
             }
         }
+        return compressedEvents;
+    }
+
+    private List<Event> compressByTypeEvents(List<Event> events, EventType eventType) {
+        List<Event> compressedEvents = new ArrayList<>();
+        Event start = events.get(0);
+        EventData<?> startDatum = start.getDatum(eventType);
+        for (int i = 1; i < events.size(); i++) {
+            Event event = events.get(i);
+            EventData<?> datum = event.getDatum(eventType);
+            if (!Objects.equals(startDatum, datum)) {
+                compressedEvents.add(start);
+                // Not at the end of log
+                if (i + 1 < events.size()) {
+                    start = events.get(++i);
+                    startDatum = datum;
+                }
+            }
+        }
+        return compressedEvents;
+    }
+
+    private EpisodeEventLog postCompress(List<Event> compressedEvents, List<Event> events,
+                                         EpisodeEventLog episodeEventLog, RunningAverage runningAverage) {
         compressedEvents.add(events.get(events.size() - 1));
         double compression = (double) compressedEvents.size() / (double) events.size();
-        this.averageCompression.add(compression);
-        LOG.info("Compress ration {} for {}", PERCENTAGE.format(compression), episodeEventLog.getEpisode());
+        runningAverage.add(compression);
+        LOG.debug("Compress ration {} for {}", PERCENTAGE.format(compression), episodeEventLog.getEpisode());
         EpisodeEventLog compressedLog = new EpisodeEventLog(episodeEventLog.getEpisode());
         compressedLog.append(compressedEvents);
-
         return compressedLog;
-    }
-
-    public RunningAverage getAverageCompression() {
-        return averageCompression;
-    }
-
-    public String getAverageCompressionString() {
-        return PERCENTAGE.format(this.averageCompression.getCurAverage());
     }
 }

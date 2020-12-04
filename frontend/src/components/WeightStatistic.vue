@@ -42,9 +42,6 @@ function spec(): VisualizationSpec {
           title: 'min. Spielzeit in Stunden',
           titleFontSize: 16,
           labelFontSize: 12
-        },
-        scale: {
-          domainMin: 0
         }
       },
       y: {

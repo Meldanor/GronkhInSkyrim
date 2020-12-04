@@ -30,5 +30,5 @@ public class Config {
     // An output path where the event log files are written to
     public static final File EVENT_LOG_PATH = new File("/eventLogs");
     // A
-    public static final File POST_PROCESS_SERIES_LOG_PATH = new File("/Users/kiliangartner/Downloads/20201128__181057__332__737916");
+    public static final File POST_PROCESS_SERIES_LOG_PATH = new File("/Users/kiliangartner/Downloads/20201202__000245__335__744627");
 }

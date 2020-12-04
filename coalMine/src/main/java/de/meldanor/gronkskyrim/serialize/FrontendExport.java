@@ -21,9 +21,12 @@ import static de.meldanor.gronkskyrim.Util.JSON;
 public class FrontendExport {
 
     public void exportTo(SeriesEventLog seriesEventLog, File targetDir) throws Exception {
+        // Compress in general
         seriesEventLog = seriesEventLog.compress();
-        writeWeightData(seriesEventLog, targetDir);
-        writeGoldData(seriesEventLog, targetDir);
+        // Compress additionally by weight
+        writeWeightData(seriesEventLog.compress(EventType.PLAYER_WEIGHT), targetDir);
+        // Compress additionally by gold
+        writeGoldData(seriesEventLog.compress(EventType.PLAYER_GOLD), targetDir);
         writeSeriesData(seriesEventLog, targetDir);
     }
 
@@ -63,7 +66,7 @@ public class FrontendExport {
                 if (playerWeight != null) {
                     episodeData.add(
                             Map.of(
-                                    "timestamp", timeOffset,
+                                    "timestamp", (int) (event.getFrameTime() + timeOffset),
                                     "value", playerWeight.getCurrentWeight(),
                                     "type", "cur"
                             )
@@ -71,7 +74,7 @@ public class FrontendExport {
                     );
                     episodeData.add(
                             Map.of(
-                                    "timestamp", timeOffset,
+                                    "timestamp", (int) (event.getFrameTime() + timeOffset),
                                     "value", playerWeight.getMaximumWeight(),
                                     "type", "max"
                             )
@@ -101,9 +104,8 @@ public class FrontendExport {
                 if (playerGold != null) {
                     episodeData.add(
                             Map.of(
-                                    "timestamp", timeOffset,
-                                    "value", playerGold.getGold(),
-                                    "type", "cur"
+                                    "timestamp", (int) (event.getFrameTime() + timeOffset),
+                                    "value", playerGold.getGold()
                             )
                     );
                 }

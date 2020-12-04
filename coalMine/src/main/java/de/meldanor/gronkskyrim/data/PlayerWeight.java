@@ -5,6 +5,7 @@ import de.meldanor.gronkskyrim.ocr.ParseException;
 import de.meldanor.gronkskyrim.serialize.dto.EventDataDto;
 import de.meldanor.gronkskyrim.serialize.dto.PlayerWeightDto;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,5 +52,18 @@ public class PlayerWeight implements EventData<PlayerWeight> {
     @Override
     public EventDataDto toSerializable() {
         return new PlayerWeightDto(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PlayerWeight that = (PlayerWeight) o;
+        return currentWeight == that.currentWeight && maximumWeight == that.maximumWeight;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(currentWeight, maximumWeight);
     }
 }

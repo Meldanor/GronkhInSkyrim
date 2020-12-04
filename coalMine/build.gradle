@@ -18,8 +18,6 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.2.3'
     implementation 'info.picocli:picocli:4.5.2'
     implementation 'net.bramp.ffmpeg:ffmpeg:0.6.2'
-    // For Murmur3 hashing
-    implementation 'com.google.guava:guava:30.0-jre'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
 }

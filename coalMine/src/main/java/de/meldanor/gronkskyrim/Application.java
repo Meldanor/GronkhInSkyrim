@@ -57,8 +57,6 @@ public class Application implements Callable<Integer> {
         LOG.info("Starting post processing...");
         ParsedSeries series = new ParsedSeries(Config.POST_PROCESS_SERIES_LOG_PATH);
         SeriesEventLog eventLog = new SeriesEventLog(series);
-//        File file = new File("output.csv");
-//        CsvExport.getInstance().exportTo(file, eventLog);
         File file = new File("/Users/kiliangartner/IdeaProjects/private/gronkskyrim/frontend/public");
         FrontendExport frontendExport = new FrontendExport();
         frontendExport.exportTo(eventLog, file);

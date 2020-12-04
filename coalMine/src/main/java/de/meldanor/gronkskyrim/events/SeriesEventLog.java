@@ -5,6 +5,7 @@ import de.meldanor.gronkskyrim.data.SeriesBase;
 import de.meldanor.gronkskyrim.postprocess.EpisodeEventLogCompressor;
 import de.meldanor.gronkskyrim.postprocess.ParsedSeries;
 import de.meldanor.gronkskyrim.source.SourceSeries;
+import de.meldanor.gronkskyrim.util.RunningAverage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,19 +79,34 @@ public class SeriesEventLog {
         return eventLogs;
     }
 
-    public List<EpisodeEventLog> getCompressedEventLogs() {
-        EpisodeEventLogCompressor compressor = new EpisodeEventLogCompressor();
-        List<EpisodeEventLog> eventLogs = this.eventLogs
-                .stream()
-                .map(compressor::compress)
-                .collect(Collectors.toList());
-        LOG.info("{} avg. compression rate", compressor.getAverageCompressionString());
-        return eventLogs;
+    public SeriesEventLog compress() {
+        return this.compress(null);
     }
 
-    public SeriesEventLog compress() {
-        List<EpisodeEventLog> eventLogs = this.getCompressedEventLogs();
+    public SeriesEventLog compress(EventType eventType) {
+        List<EpisodeEventLog> eventLogs = this.getCompressedEventLogs(eventType);
         return new SeriesEventLog(this.episodeLogDirectory, this.series, eventLogs);
+    }
+
+    private List<EpisodeEventLog> getCompressedEventLogs(EventType eventType) {
+        EpisodeEventLogCompressor compressor = new EpisodeEventLogCompressor();
+        RunningAverage runningAverage = new RunningAverage();
+        List<EpisodeEventLog> eventLogs = this.eventLogs
+                .stream()
+                .map((episodeEventLog) -> {
+                    if (eventType == null) {
+                        return compressor.compress(episodeEventLog, runningAverage);
+                    } else {
+                        return compressor.compress(episodeEventLog, eventType, runningAverage);
+                    }
+                })
+                .collect(Collectors.toList());
+        if (eventType == null) {
+            LOG.info("{} avg. compression rate", runningAverage.getAsPercentage());
+        } else {
+            LOG.info("{} avg. compression rate for {}", runningAverage.getAsPercentage(), eventType);
+        }
+        return eventLogs;
     }
 
 }
